@@ -1,0 +1,31 @@
+{
+  "name": "fb-marketplace-listing-optimizer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "login": "tsx src/index.ts login",
+    "scan": "tsx src/index.ts scan",
+    "update-price": "tsx src/index.ts update-price",
+    "update-title": "tsx src/index.ts update-title",
+    "update-description": "tsx src/index.ts update-description",
+    "fully-optimize": "tsx src/index.ts fully-optimize",
+    "test": "tsx test/pricing.test.ts",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "commander": "^15.0.0",
+    "dotenv": "^18.0.3",
+    "playwright": "^1.63.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.2",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
