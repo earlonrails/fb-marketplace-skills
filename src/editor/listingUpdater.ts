@@ -81,4 +81,38 @@ export class ListingUpdater {
       return { success: false, message: err.message };
     }
   }
+
+  static async renewListing(
+    page: Page,
+    item: ListingItem,
+    config?: StrategyConfig
+  ): Promise<{ success: boolean; message: string }> {
+    const isDryRun = config?.dryRun ?? true;
+
+    console.log(`\n🔄 Processing renewal for listing [${item.id}]: "${item.title}"`);
+
+    if (isDryRun) {
+      console.log(`   🛡️ [DRY RUN ACTIVE] Staging renewal check for item "${item.title}" (ID: ${item.id}).`);
+      return { success: true, message: 'Dry run completed - renewal staged.' };
+    }
+
+    try {
+      // Find card container matching item title or ID
+      const card = page.locator(`div:has-text("${item.title}")`).filter({ hasText: 'Renew' });
+      const renewBtn = card.locator('div[role="button"]:has-text("Renew"), span:has-text("Renew")');
+
+      if ((await renewBtn.count()) > 0 && (await renewBtn.first().isEnabled())) {
+        await renewBtn.first().click();
+        await page.waitForTimeout(2000);
+        console.log(`   🎉 Successfully renewed listing "${item.title}"!`);
+        return { success: true, message: 'Listing renewed successfully.' };
+      } else {
+        console.log(`   ℹ️ Item "${item.title}" is not currently eligible for renewal.`);
+        return { success: false, message: 'Not eligible for renewal yet.' };
+      }
+    } catch (err: any) {
+      console.error(`   ❌ Failed to renew listing ${item.id}:`, err.message);
+      return { success: false, message: err.message };
+    }
+  }
 }

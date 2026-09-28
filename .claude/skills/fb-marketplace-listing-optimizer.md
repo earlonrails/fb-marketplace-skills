@@ -4,13 +4,13 @@ command: /fb-marketplace-listing-optimizer
 aliases:
   - /fb-optimizer
   - /fb-marketplace
-description: Automated Facebook Marketplace listing price audit and optimization skill. Uses Playwright browser session to scrape active listings, compare market prices, and optimize titles, descriptions, and prices.
-version: 1.0.0
+description: Automated Facebook Marketplace listing price audit, renewal, and content optimization skill. Uses Playwright browser session to scrape active listings, compare market prices, renew eligible listings, and optimize titles, descriptions, and prices.
+version: 1.1.0
 ---
 
 # 🛍️ Facebook Marketplace Listing Optimizer Skill
 
-This skill allows AI agents to inspect, price-check against market comps, and optimize Facebook Marketplace listings directly via slash commands.
+This skill allows AI agents to inspect, price-check against market comps, renew eligible items, and optimize Facebook Marketplace listings directly via slash commands.
 
 ---
 
@@ -28,10 +28,11 @@ Invoke using `/fb-marketplace-listing-optimizer` or the shorter aliases `/fb-opt
 | :--- | :--- | :--- |
 | `/fb-marketplace login` | Check FB auth status or open login prompt | `npm run login` |
 | `/fb-marketplace scan` | Scrape listings & market comps (Audit Mode) | `npm run scan` |
+| `/fb-marketplace renew` | Renew active listings to boost Marketplace reach | `npm run renew` |
 | `/fb-marketplace price` | Calculate & update listing prices to market comps | `npm run update-price` |
 | `/fb-marketplace title` | Polish titles for search reach & clarity | `npm run update-title` |
 | `/fb-marketplace description` | Format item descriptions with bullet points & terms | `npm run update-description` |
-| `/fb-marketplace full` | Execute full listing optimization pipeline | `npm run fully-optimize` |
+| `/fb-marketplace full` | Execute full pipeline (Renew + Price + Title + Description + Tags) | `npm run fully-optimize` |
 
 ---
 
@@ -46,32 +47,33 @@ Invoke using `/fb-marketplace-listing-optimizer` or the shorter aliases `/fb-opt
 
 ## 🤖 AI Agent Execution Protocol
 
-When the user issues a slash command (e.g., `/fb-marketplace scan` or `/fb-optimizer price --live`), the assistant MUST follow this execution workflow:
+When the user issues a slash command (e.g., `/fb-marketplace renew` or `/fb-optimizer full --live`), the assistant MUST follow this execution workflow:
 
 ### Step 1: Parse Command & Options
-Extract action (`scan`, `login`, `price`, `title`, `description`, `full`) and flags (`--live`, `--offset`, `--item`).
+Extract action (`scan`, `login`, `renew`, `price`, `title`, `description`, `full`) and flags (`--live`, `--offset`, `--item`).
 
 ### Step 2: Execute CLI Engine
 Run the corresponding command in `/home/kevin/code/fb-marketplace-listing-optimizer`:
 
 ```bash
-# Example for /fb-marketplace scan:
-npm run scan
+# Example for renewing active listings:
+npm run renew
 
-# Example for /fb-marketplace price --live:
-npm run start -- update-price --live
+# Example for full optimization with live updates:
+npm run fully-optimize -- --live
 
-# Example for /fb-marketplace price --offset -10:
+# Example for price update with custom offset:
 npm run start -- update-price --offset -10
 ```
 
 ### Step 3: Format & Present Results
 Present the audit or optimization results in a clean Markdown summary table:
 
-| Listing Title | Item ID | Current Price | Market Comp Median | Target Price | Diff | Action |
+| Listing Title | Item ID | Current Price | Market Comp Median | Target Price | Renewal Status | Action |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| Sony WH-1000XM4 Headphones | `1001` | $250 | $205 | **$195** | -$55 | 🟢 LOWER |
+| Golf Guard Hard Golf Travel Case | `6887062956` | $65 | $83 | **$79** | 🟢 Renewed | ⚡ FULL OPTIMIZED |
+| Yakima Fork Mount Bike Trays | `1665135783` | $50 | $35 | **$33** | ℹ️ Not Eligible | ⚡ FULL OPTIMIZED |
 
 ### Step 4: Live Update Safeguard Prompt
-If running in dry-run mode and price updates are recommended, present the proposed changes and ask:
-> "Would you like me to apply these updates live to Facebook Marketplace? Reply with **`/fb-marketplace price --live`** to confirm."
+If running in dry-run mode and updates are recommended, present the proposed changes and ask:
+> "Would you like me to apply these updates live to Facebook Marketplace? Reply with **`/fb-marketplace full --live`** to confirm."

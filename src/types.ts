@@ -46,6 +46,7 @@ export interface OptimizationResult {
   item: ListingItem;
   pricing?: PricingAnalysis;
   content?: ContentOptimization;
+  renewed?: boolean;
   updated: boolean;
   errors?: string[];
 }

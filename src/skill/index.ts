@@ -9,7 +9,7 @@ import { DEFAULT_CONFIG } from '../config.js';
 import { StrategyConfig } from '../types.js';
 
 export interface SkillParams {
-  action: 'login' | 'scan' | 'update-price' | 'update-title' | 'update-description' | 'fully-optimize';
+  action: 'login' | 'scan' | 'renew' | 'update-price' | 'update-title' | 'update-description' | 'fully-optimize';
   live?: boolean;
   offset?: number;
   itemId?: string;
@@ -19,13 +19,13 @@ export interface SkillParams {
 export const FB_MARKETPLACE_TOOL_DEFINITION = {
   name: 'fb_marketplace_optimizer',
   description:
-    'Automated Facebook Marketplace skill to check active items, compare market prices, and optimize prices, titles, descriptions, and tags.',
+    'Automated Facebook Marketplace skill to check active items, compare market prices, renew listings, and optimize prices, titles, descriptions, and tags.',
   parameters: {
     type: 'object',
     properties: {
       action: {
         type: 'string',
-        enum: ['login', 'scan', 'update-price', 'update-title', 'update-description', 'fully-optimize'],
+        enum: ['login', 'scan', 'renew', 'update-price', 'update-title', 'update-description', 'fully-optimize'],
         description: 'Action to perform.',
       },
       live: {
@@ -99,8 +99,13 @@ export async function executeFBMarketplaceSkill(params: SkillParams) {
         contentOpt = ContentOptimizer.optimizeContent(item);
       }
 
+      let renewRes = { success: true, message: 'N/A' };
+      if (['renew', 'fully-optimize'].includes(params.action)) {
+        renewRes = await ListingUpdater.renewListing(page, item, config);
+      }
+
       let updateRes = { success: true, message: 'Scan complete' };
-      if (params.action !== 'scan') {
+      if (!['scan', 'renew'].includes(params.action)) {
         updateRes = await ListingUpdater.updateListing(
           page,
           item,

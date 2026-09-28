@@ -97,11 +97,21 @@ export function createProgram() {
     await runPipeline({ action: 'description', config, targetItemId: options.item });
   });
 
+  // Command: renew
+  addCommonOptions(
+    program
+      .command('renew')
+      .description('Renew active listings to boost Marketplace visibility')
+  ).action(async (options) => {
+    const config = resolveConfig(options);
+    await runPipeline({ action: 'renew', config, targetItemId: options.item });
+  });
+
   // Command: fully-optimize
   addCommonOptions(
     program
       .command('fully-optimize')
-      .description('Execute full optimization: price, title, description, and search tags')
+      .description('Execute full optimization: renew eligible listings, update prices, titles, descriptions, and tags')
   ).action(async (options) => {
     const config = resolveConfig(options);
     await runPipeline({ action: 'full', config, targetItemId: options.item });
@@ -115,7 +125,7 @@ async function runPipeline({
   config,
   targetItemId,
 }: {
-  action: 'scan' | 'price' | 'title' | 'description' | 'full';
+  action: 'scan' | 'price' | 'title' | 'description' | 'renew' | 'full';
   config: StrategyConfig;
   targetItemId?: string;
 }) {
@@ -173,7 +183,13 @@ async function runPipeline({
         contentOpt = ContentOptimizer.optimizeContent(item);
       }
 
-      if (action !== 'scan') {
+      // 1. Process renewal if action is 'renew' or 'full'
+      if (['renew', 'full'].includes(action)) {
+        await ListingUpdater.renewListing(page, item, config);
+      }
+
+      // 2. Process listing content & price updates
+      if (!['scan', 'renew'].includes(action)) {
         await ListingUpdater.updateListing(
           page,
           item,

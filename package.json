@@ -8,6 +8,7 @@
     "login": "tsx src/index.ts login",
     "scan": "tsx src/index.ts scan",
     "update-price": "tsx src/index.ts update-price",
+    "renew": "tsx src/index.ts renew",
     "update-title": "tsx src/index.ts update-title",
     "update-description": "tsx src/index.ts update-description",
     "fully-optimize": "tsx src/index.ts fully-optimize",
