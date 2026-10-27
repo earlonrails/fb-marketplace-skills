@@ -13,9 +13,10 @@ An automated browser skill application powered by **Node.js** and **Playwright**
 | **Update Price** *(Default)* | `npm run update-price` | Calculates competitive target price (5% below median comp) and updates listing price. |
 | **Update Title** | `npm run update-title` | Refines listing titles with clean capitalization and condition tags for search reach. |
 | **Update Description** | `npm run update-description` | Formats descriptions into structured bullet points with terms and highlights. |
+| **Delete Sold** | `npm run delete-sold` | Finds and deletes sold/out-of-stock listings to avoid accidental relisting. |
 | **Fully Optimize** | `npm run fully-optimize` | Executes price, title, description, and search tag optimizations sequentially. |
 
-> 🛡️ **Dry-Run by Default**: All update commands default to **Dry-Run mode** so you can preview changes safely. Add the `--live` flag to execute live updates on Facebook Marketplace.
+> 🛡️ **Dry-Run by Default**: All update and delete commands default to **Dry-Run mode** so you can preview changes safely. Add the `--live` flag to execute live updates on Facebook Marketplace.
 
 ---
 
@@ -78,6 +79,16 @@ If you are not authenticated, Playwright will open a Chromium window. Simply log
 ### Run a Pricing Audit (Scan Mode)
 ```bash
 npm run scan
+```
+
+### Preview Sold Listings Cleanup (Dry-Run Mode)
+```bash
+npm run delete-sold
+```
+
+### Permanently Delete Sold Listings (Live Mode)
+```bash
+npm run delete-sold -- --live
 ```
 
 ### Preview Price Updates (Dry-Run Mode)

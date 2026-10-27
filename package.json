@@ -12,6 +12,7 @@
     "update-title": "tsx src/index.ts update-title",
     "update-description": "tsx src/index.ts update-description",
     "fully-optimize": "tsx src/index.ts fully-optimize",
+    "delete-sold": "tsx src/index.ts delete-sold",
     "test": "tsx test/pricing.test.ts",
     "build": "tsc"
   },

@@ -7,8 +7,20 @@ export class CompsScraper {
     const encodedQuery = encodeURIComponent(query);
     const searchUrl = `https://www.facebook.com/marketplace/search/?query=${encodedQuery}`;
 
-    await page.goto(searchUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
-    await page.waitForTimeout(3000);
+    try {
+      await page.goto(searchUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
+      await page.waitForTimeout(3000);
+    } catch (err: any) {
+      console.log(`⚠️ Search navigation note for "${query}": ${err.message}. Retrying...`);
+      try {
+        await page.waitForTimeout(2000);
+        await page.goto(searchUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
+        await page.waitForTimeout(3000);
+      } catch (retryErr: any) {
+        console.log(`⚠️ Search navigation failed for "${query}": ${retryErr.message}`);
+        return [];
+      }
+    }
 
     // Scroll slightly to trigger image & content lazy-loading
     await page.evaluate(() => window.scrollBy(0, 800));

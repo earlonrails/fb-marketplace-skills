@@ -10,6 +10,7 @@ export interface ListingItem {
   saves?: number;
   url: string;
   editUrl?: string;
+  status?: 'active' | 'sold' | 'out_of_stock' | 'pending';
 }
 
 export interface MarketComp {
@@ -47,6 +48,7 @@ export interface OptimizationResult {
   pricing?: PricingAnalysis;
   content?: ContentOptimization;
   renewed?: boolean;
+  deleted?: boolean;
   updated: boolean;
   errors?: string[];
 }
